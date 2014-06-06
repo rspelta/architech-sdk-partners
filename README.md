@@ -34,7 +34,7 @@ partners                                        - folder in ~/architech_sdk/
 
 
 - partner2 is the partner alias, and is choosen by architech
-- index.html: the html uses the java script functions starting with "top." keyword. These functions are execute by splashscreen binary.
+- index.html: the html uses the java script functions starting with "top." keyword. These functions are execute by splashscreen binary. In splashscreen_interface/index.html there are the functions used with a brief comment how-do.
 
 
 In https://github.com/architech-boards/architech-manifest.git branch dora there is the manifest file "partners" where is possible add the partner boards.
