@@ -1,23 +1,32 @@
 **Splashscreen**
-L'ambiente SDK di architech boards utilizza come front-end lo splashscreen. Questa applicazione basata su html permette di accedere alle boards dell'architech e dei partner. Attraverso i suoi menu l'utente può lanciare le applicazioni appartenenti all'SDK.
-Questa guida ha lo scopo di permettere al partner di creare il proprio menu' all'interno dello splashscreen es.
+L'ambiente SDK di architech boards utilizza come front-end il programma Splashscreen residente in *~/architech_sdk/splashscreen/*. Questa applicazione-browser basata su html permette di accedere alle boards di architech e dei partner. Attraverso i menu l'utente può lanciare le applicazioni dell'SDK (eclipse, qtcreator,...).
 
 [immagini di esempio]
 
-Il partner è tenuto a utilizzare lo splashscreen per interagire con l'utente finale. Se non si vuole utilizzare l'interfaccia grafica fornita di base è possibile modificarla, si veda il paragrafo "personalizzazione".
-Lo Splashscreen legge le informazioni del partner e delle schede a partire dalla cartella *~/architech_sdk/partners*.
+Questa guida illustra cosa deve fare un partner per creare il proprio menu' all'interno dello splashscreen. E' richiesta una conoscenza di base in Linux che non verrà fornita in questo tutorial.
+
+Il partner è tenuto a utilizzare lo splashscreen come front-end. Se non si vuole utilizzare la grafica standard dei menu è possibile modificarla, si veda il paragrafo **Personalizzare i menu**.
+
+La guida è suddivida nei sequenti paragragfi
+- **Aggiungere un nuovo Partner**
+- **Aggiungere una nuova scheda al Partner**
+- **La fase di Installazione**
+- **La fase di Aggiornamento**
+- **Personalizzare i menu**
 
 **Aggiungere un nuovo Partner**
-In questo paragrafo faremo un esempio di creazione di un nuovo partner chiamato "tecnoware".
-Le cartelle presenti in *~/architech_sdk/partners* identificano i partner presenti nell'SDK. Per prima cosa procediamo a creare la directory del nuovo partner, è consigliabile usare nomi in minuscolo.
+In questo paragrafo creeremo per esempio un nuovo partner chiamato "tecnoware".
+Lo Splashscreen per visualizzare i menu del partner e delle sue schede legge le informazioni a partire dalla cartella *~/architech_sdk/partners/*.
+Le cartelle presenti in *~/architech_sdk/partners/* identificano i partner presenti nell'SDK. Per prima cosa procediamo a creare la directory del nuovo partner, è consigliabile usare nomi in minuscolo.
 
 	mkdir -p ~/architech_sdk/partners
 	mkdir tecnoware
 
 All'interno della nuova cartella andremo a creare la cartella "splashscreen" che conterrà tutte le informazioni del partner. Le informazioni sono:
+- il nome del partner
 - l'immagine del logo
 - una breve descrizione del partner
-- il nome del partner
+- opzionalmente il file index.html, per dettagli si veda il paragrafo **Personalizzare i menu**
 Queste informazioni devono essere inserite in 5 specifici file con l'esatto nome:
 
 	mkdir -p ~/architech_sdk/partners/tecnoware/splashscreen
@@ -38,16 +47,15 @@ A questo punto lo Splashscreen riconoscerà la presenza di un nuovo partner e lo
 
 
 **Aggiungere una nuova scheda al Partner**
-A questo punto ora che il partner "tecnoware" è stato creato andremo a creare la scheda del partner. Le cartelle presenti in **~/architech_sdk/partners/tecnoware** esclusa lo splashscreen rappresentano le schede. Se ad esempio si vuole inserire la scheda "tecno" si dovra' creare la cartella:
+A questo punto ora che il partner "tecnoware" è stato creato andremo a creare la sua prima scheda. Le cartelle presenti in **~/architech_sdk/partners/tecnoware** esclusa lo splashscreen identificano le schede del partner. Se ad esempio si vuole inserire la scheda "tecno" si dovra' creare la cartella:
 
-	mkdir -p ~/architech_sdk/partners/tecnoware/tecno
+	mkdir -p ~/architech_sdk/partners/tecnoware/tecno/splashscreen/
 
-in cui all'interno di essa verrà creata la cartella splashscreen contenente tutte le informazioni della scheda e gli script.
+in cui all'interno verranno creati i file con le informazione della scheda e gli script per avviare i programmi dell'SDK. L'immagine sequente mostra il menu standard per la scheda tecno, ogni singola voce del menu lancia uno specifico script.
 
 [Immagine di esempio]
-Ogni singola voce del menu' lancia uno specifico script.
- 
-Come per la creazione del partner anche per la scheda le informazioni e gli script devono essere inseriti in specifici file con l'esatto nome:
+
+Come per la creazione del partner anche i sequenti file devono essere creati con il nome esatto:
 - name.txt		nome della scheda
 - board_image.txt	con il nome dell'immagine della scheda
 - tecno.jpg		l'immagine della scheda
@@ -61,8 +69,11 @@ Come per la creazione del partner anche per la scheda le informazioni e gli scri
 - run_images-folder	la cartella in cui vengono salvate le immagini compilate da Yocto
 - run_install		installare/aggiornare l'SDK della scheda (toolchain, Yocto,...)
 - run_qt-creator 	lancia QtCreator
-Se una applicazione non e' disponibile, ad esempio QtCreator inserire nello script di "run_qt-creator" un message box che avvisa l'utente.
-Architechboard per convenzione ha installato i programmi e il workspace all'interno della directory della scheda. Per fare un esempio di utilizzo nella dirctory *~/architech_sdk/architech/tibidabo/* oltre alla cartella dello splashscreen ha:
+- opzionalmente il file index.html, per dettagli si veda il paragrafo **Personalizzare i menu**
+
+Gli script devono essere scritti dal partner per ottemperare i compiti descritti sora. Se una applicazione non e' disponibile, ad esempio QtCreator, inserire nello script di "run_qt-creator" un message box che avvisa l'utente.
+
+Architechboard per convenzione ha installato i programmi e il workspace all'interno della directory della scheda. Per fare un esempio, nella dirctory *~/architech_sdk/architech/tibidabo/* oltre alla cartella dello splashscreen sono presenti i file:
 - conf		cartella utilizzata per la gestione delle versioni dei programmi
 - docs		utilizzata per la documentazione offline
 - eclipse	
@@ -73,10 +84,7 @@ Architechboard per convenzione ha installato i programmi e il workspace all'inte
 - workspace	directory di lavoro di qt ed eclipse
 - yocto		
 
-
-
-A questo punto abbiamo creato il partner e la scheda.
-This is the the tree to insert in the splashscreen a page with the board of a architech partner.
+A questo punto abbiamo creato sia il partner che la scheda. Concettualmente l'albero dei partners sarà costruito nel sequente modo:
 
 partners                                        - folder in ~/architech_sdk/
     |
@@ -104,24 +112,25 @@ partners                                        - folder in ~/architech_sdk/
     |       |                   |-- run_install             - script to update the board sdk
     |       |                   |-- run_qt-creator          - script to launch qt creator
     |       |                   |-- short_description.txt   - short description of the board [html tags supported]
+    |       |                   |-- index.html (optional)   - alternative display of the board page in the splashscreen
     |       |-- board2
     |       |-- ...
     |       |-- boardN
     |-- ...
     |-- partnerN
 
-per permettere all'SDK di installarlo automaticamente è necessario creare dei repository GIT per salvare i dati e dare la possibilità allo script di installazione della virtual machine di scaricarli, installarli e nel caso aggiornare eventuali modifiche.
+A questo punto come ultima operazione prima di passare alla fase di installazione è necessario salvare ogni splashscreen creato in un repository git.
 I due repository da creare saranno in
 * ~/architech_sdk/partners/tecnoware/splashscreen (es. tecnoware-partner.git)
 * ~/architech_sdk/partners/tecnoware/tecno/splashscreen (es. tecnoware-splashscreen.git)
 
 La spiegazione dei comandi di git sono fuori dallo scopo della guida.
+Questa procedura è essenziale per permettere al programma di installazione dell'SDK di scaricare e installare/aggiornare i dati del partner.
 
-**Installazione**
-Lo script "machine_installer" permette all'utente di installare da zero l'SDK. Lo script non fa altro che scaricare i repository git ed eseguire determinati script all'interno di essi.
-I seguenti passi sono eseguiti dalla procedura di installazione:
-1. Viene scaricato il manifesto https://github.com/architech-boards/architech-manifest.git
-in questo repository cè il file "partners". In questo file ogni riga definisce le informazioni per installare l'SDK dei partners con le relative schede.
+**La fase di Installazione**
+Lo script "machine_installer" permette all'utente di installare da zero l'intero SDK sulla propria macchina Linux. Lo script non fa altro che scaricare dei repository git ed eseguire determinati script all'interno di essi.
+
+Durante l'intallazione per prima cosa viene scaricato il manifesto da *https://github.com/architech-boards/architech-manifest.git* in questo repository cè il file "partners". In questo file ogni riga definisce le informazioni per installare l'SDK dei partners con le sue schede.
 
 [partner alias] | [git repository with splashscreen directory of the partner] | [version of yocto] | [git repository with manifest of the boards partner] | [version of yocto]
 
@@ -131,16 +140,16 @@ in questo repository cè il file "partners". In questo file ogni riga definisce 
 - git repository with manifest of the boards partner is the metafile with listed all the board of the partner
 - The current version of yocto is dora
 
-Continuando l'esempio del paragrafo precedente, avremo per la "tecnoware" la seguente riga:
+Continuando l'esempio del paragrafo precedente, avremo per la "tecnoware" la seguente riga nel manifesto:
 
 tecnoware|https://github.com/tecnoware/tecnoware-partner.git|dora|https://github.com/tecnoware/tecnoware-manifest.git|dota
 
-Con questa riga lo script di installazione creerà 
-1. la directory "~/architech_sdk/partners/tecnoware/"
+Lo script di installazione interpretando la linea eseguirà i sequenti comandi:
+1. crea la directory "~/architech_sdk/partners/tecnoware/"
 2. in questa directory scaricherà il ramo "dora" del repository "tecnoware-partner.git"
 3. e anche il ramo "dora" del repository "architech-manifest.git"
 
-Il repository "architech-manifest" serve per installare le schede appartenenti al partner, come nel precedente manifesto ogni riga rappresenta una singola board. In every line of the manifest file of the board is showed where download the repository of the splashscreen of the board. The syntax is:
+Il repository "architech-manifest" serve per installare le schede appartenenti al partner, in every line of the manifest file of the board is showed where download the repository of the splashscreen of the board. The syntax is:
 
 [board alias] | [git repository with splashscreen directory of the board] | [version of yocto]
 
@@ -155,33 +164,50 @@ tecno|https://github.com/tecnoware/tecno-splashscreen.git|dora
 Con questa riga lo script di installazione creerà
 1. la directory "~/architech_sdk/partners/tecnoware/tecno/"
 2. in questa directory scaricherà il ramo "dora" del repository "tecno-splashscreen.git"
-3. lancia lo script *~/architech_sdk/partners/tecnoware/tecno/splashscreen/run_install* per far installare tutti i pacchetti necessari all'ambiente SDK (yocto, la toolchain, eclipse, qtcreator e le librerie, java vm,...)
+3. lancia lo script *~/architech_sdk/partners/tecnoware/tecno/splashscreen/run_install* per far installare tutti i pacchetti necessari all'ambiente SDK (yocto, la toolchain, eclipse, qtcreator e le librerie, java vm,...).
 
-Certi file come eclipse o qtcreator non vengono inclusi nel repository dello splashscreen della scheda ma vengono scaricati a parte tramite un server dedicato apposta per il download dei binari. Il repository git viene utilizzato esclusivamente per l'interfaccia dello Splashscreen.
+A questo punto sarà lo script "run_install" programmato dal partner ad installare tutti i programmi necessari alla scheda. Come linea guida suggeriamo di seguire i sequenti punti
 
-Architechboard per mantenere in ogni scheda i metalayer di yocto, viene utilizzato il programma "repo", questo tool svolge il compito di mantenere più repository git contemporaneamente con un unico comando. Questa guida non ha come presupposto l'illustrare il funzionamento di questo tool, quanto ha fornire un suggerimento al partner qualora volesse utilizzare più repository git col minor sforzo possibile.
+1. Il repository git viene utilizzato esclusivamente per i file dell'interfaccia dello Splashscreen, i file che non fanno parte di quelli descritti nei paragrafi precedenti (eclipse o qtcreator,...) non vengono inclusi nei repository git ma vengono da un server dedicato per il download dei binari. 
+2. Architechboard per mantenere in ogni scheda i metalayer di yocto, utilizza il programma "repo", questo tool svolge il compito di mantenere più repository git contemporaneamente con un unico comando. Questa guida non ha come presupposto l'illustrare il funzionamento di questo tool, quanto ha fornire un suggerimento al partner qualora volesse mantenere più repository git col minor sforzo possibile.
+3. Lo script "run_install" deve permettere di essere eseguito più volte e se necessario aggiornare i file installati.
+4. Durante l'intallazione delle schede per convenzione tutte le applicazioni e le directory usate dall'utente hanno come path base *~/architech_sdk/partners/nomepartner/nomescheda/* ad eccezione delle librerie Qt in cui vengono installate in */usr/local/Trolltech/NomeScheda*
 
-Durante l'intallazione delle schede per convenzione tutte le applicazioni e le directory usate dall'utente hanno come path base *~/architech_sdk/partners/nomepartner/nomescheda/* ad eccezione delle librerie Qt in cui vengono installate in */usr/local/Trolltech/NomeScheda*
-
-**Mantenimento**
+**La fase di Aggiornamento**
 L'utente tramite lo Splashscreen ha la possibilità di aggiornare l'SDK. Vi sono due tipi di aggiornamenti possibili:
 - aggiornamento dello splashscreen
+
+[ immagine di esempio ]
+Si occupa di aggiornare con l'operazione di "pull" il repository git dello splashscreen, aggiornando anche il repository "architech-manifest.git".
+
 - aggiornamento della board
 
-Il primo permette di aggiornare l'interfaccia dello splashscreen e degli splashscreen dei partners, il secondo di aggiornare i singoli splashscreen delle schede.
-Lo script "run_install" è importante perchè è quello che si deve occupare dell'installazione da zero dell'ambiente di sviluppo delle schede ed è quello che viene chiamato quando l'utente decide di aggiornare la board tramite il menu. Questo tipo di aggiornamento deve prevedere la possibilità di upgradare il software successivamente di versione in versione.
+[ immagine di esempio ]
+Questo aggiornamento provvede ad aggiornare tutti i repository splashscreen delle schede installate nell'SDK.
 
-**Personalizzazione**
-Come descitto all'inizio, architech-board vincola il partner ad utilizzare lo Splashscreen come front-end per l'utente, ma lascia la possibilità di personalizzare l'interfaccia grafica qualora decidesse di non usare quella di default.
-Lo Splashscreen è sostanzialmente un browser che esegue pagine in html e javascript, con integrate delle funzioni IPIAIchemale che permettono di accedere alle directory dell'SDK.
-Qualora si volesse modificare il codice html è obbligatorio conoscere le funzioni del su cui vive il sistema.
+Ribadiamo che lo script "run_install" è importante perchè è quello che si deve occupare dell'installazione da zero dell'ambiente di sviluppo delle schede ed è quello che viene chiamato quando l'utente decide di aggiornare la board tramite il menu. Questo tipo di aggiornamento deve prevedere la possibilità di upgradare il software qualora ve ne fosse il bisogno.
 
-- formattatuttoescappa: utile per creare del lavoro non retribuito
-- chiediafabrizioininghilterraesperacherispondaaltelefono: da usare per qualsiasi evenienza. Risponde anche privatamente.
-- chiediaspelta: se proprio proprio ma proprio non si sa che pesci pigliare.
+**Personalizzare i menu**
+Come descitto all'inizio della guida, architech-board vincola il partner ad utilizzare lo Splashscreen come front-end per l'utente, ma lascia la possibilità di personalizzare l'interfaccia grafica qualora decidesse di non usare quella di default.
+Si possono personalizzare due tipi di schermate:
+1. Schermata del partner, residente in */architech_sdk/partners/nome_partner/splashscreen/*
+2. La schermata della scheda, residente in */architech_sdk/partners/nome_partner/splashscreen/*
+Per personalizzare l'interfaccia si deve creare il file "index.html" nella directory dello splashscreen il quale rimpiazzerà la schermata di default.
+Lo Splashscreen è sostanzialmente un browser che esegue pagine in html e javascript, con la possibilità di utilizzare delle funzioni IPA che permettono di accedere alle directory dell'SDK. Queste pagine html si trovano nella directory *~/architech_sdk/splashscreen_interface/*. 
+
+Le funzioni di supporto per accedere alle directory sono in index.html:
+- function get_absolute_path( relative_path )
+- function get_partner_directory( partner_alias )
+- function get_partner_board_directory( partner_alias, board_alias )
+- function get_splashscreen_interface_directory()
+per chiamarle si usa "top.nomefunzione( parametro )
+
+Le funzioni di supporto a loro volta chiamano le funzioni implementate nell'applicazione dello splashscreen. I sorgenti dello splashscreen si trovano nella cartella *~/architech_sdk/splashscreen*. Ad esempio la funzione "get_absolute_path" richiama a sua volta la funzione "process_start_detached" presente nel modulo "launcer.cpp" dei sorgenti dello Splashscreen.
 
 **Contatti**
-Chiama fabrizio, specialmente di notte, tanto è abituato a non dormire!
+
+Per problemi di sviluppo contattare la RSR, tremite il contatto aratti@rsr.it
+
 
 
 
